@@ -44,7 +44,7 @@ def go(client: Client, is_break: bool):
     if last_event.get('Go') is not None:
         print('You are not clocked in')
         return
-    location = last_event['PlaceOfWork']
+    location = last_event['From']['PlaceOfWork']
     if is_break:
         client.stamp_time('Go', location['Id'], 1)
     else:
