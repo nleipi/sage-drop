@@ -41,7 +41,7 @@ def go(client: Client, is_break: bool):
         print('You are not clocked in')
         return
     last_event = times[-1]
-    if last_event.get('Go') is not None:
+    if last_event.get('To') is not None:
         print('You are not clocked in')
         return
     location = last_event['From']['PlaceOfWork']
@@ -59,26 +59,26 @@ def times(client: Client, date_from, date_to):
     times = client.time_pairs(date_from, date_to)
     table = PrettyTable(['Date', 'Come', 'Go', 'Location', 'Info'])
     for item in times:
-        row = []
-        event_from = item['From']
-        event_date = datetime.fromisoformat(event_from['Time'])
-        row.append(event_date.strftime('%d %b'))
-        row.append(event_date.strftime('%H:%M'))
-        event_to = item.get('To')
-        go_time = ''
+        to_time = ''
         info = ''
+        from_date = ''
+        from_time = ''
+        location_name = ''
+        event_from = item.get('From')
+        if event_from:
+            event_date = datetime.fromisoformat(event_from['Time'])
+            from_date = event_date.strftime('%d %b')
+            from_time = event_date.strftime('%H:%M')
+            location = event_from.get('PlaceOfWork')
+            if location:
+                location_name = location['Name']
+
+        event_to = item.get('To')
         if event_to:
-            go_time = datetime.fromisoformat(
+            to_time = datetime.fromisoformat(
                 event_to['Time']).strftime('%H:%M')
             additinal_input = event_to.get('AdditionalInput')
             if additinal_input:
                 info = additinal_input['Description']
-        location = event_from.get('PlaceOfWork')
-        location_name = ''
-        if location:
-            location_name = location['Name']
-        row.append(go_time)
-        row.append(location_name)
-        row.append(info)
-        table.add_row(row)
+        table.add_row([from_date, from_time, to_time, location_name, info])
     print(table)

@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "sage-drop"
-version = "0.1.0"
+version = "0.1.1"
 description = ""
 authors = ["Nikolay Leipi <nikolay.semykin@googlemail.com>"]
 readme = "README.md"
