@@ -1,5 +1,6 @@
 from datetime import datetime, timedelta
 from prettytable import PrettyTable
+from math import copysign
 
 from sage_drop.client import Client
 
@@ -8,8 +9,9 @@ def balance(client: Client):
     balance_data = client.get_balance()
     data = balance_data[0]
     time_in_minutes = data['AmountInMinutes']
+    abs_time = abs(time_in_minutes)
     print('Balance: '
-          f'{time_in_minutes // 60:02.0f}:{time_in_minutes % 60:02.0f}')
+          f'{copysign(abs_time // 60, time_in_minutes):02.0f}:{abs_time % 60:02.0f}')
 
 
 def come(client: Client):
