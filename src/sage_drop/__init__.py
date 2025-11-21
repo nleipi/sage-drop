@@ -14,7 +14,7 @@ def valid_date(s):
                 'Invalid date format. Please use YYYY-MM-DD.')
 
 
-def run():
+def cli():
     try:
         user_name = os.environ['SAGE_USER']
         password = os.environ['SAGE_PASSWORD']
