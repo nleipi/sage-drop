@@ -1,26 +1,32 @@
-[tool.poetry]
+[project]
 name = "sage-drop"
-version = "0.1.2"
+version = "0.1.0"
 description = ""
-authors = ["Nikolay Leipi <nikolay.semykin@googlemail.com>"]
+authors = [
+    {name = "Nikolay Leipi",email = "nikolay.semykin@googlemail.com"}
+]
 readme = "README.md"
-packages = [{include = "sage_drop"}]
+requires-python = ">=3.12"
+dependencies = [
+    "requests (>=2.32.5,<3.0.0)",
+    "beautifulsoup4 (>=4.14.2,<5.0.0)",
+    "prettytable (>=3.17.0,<4.0.0)"
+]
+
+[tool.poetry]
+packages = [{include = "sage_drop", from = "src"}]
 include = [
     "app.py"
 ]
 
-[tool.poetry.dependencies]
-python = "^3.12"
-requests = "^2.31.0"
-beautifulsoup4 = "^4.12.3"
-prettytable = "^3.10.0"
+[dependency-groups]
+dev = [
+    "pytest (>=9.0.1,<10.0.0)"
+]
 
-[tool.poetry.group.dev.dependencies]
-pytest = "^8.1.1"
-
-[tool.poetry.scripts]
-sage = 'app:run'
+[project.scripts]
+sage = 'sage_drop:cli'
 
 [build-system]
-requires = ["poetry-core"]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
 build-backend = "poetry.core.masonry.api"
