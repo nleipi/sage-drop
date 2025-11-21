@@ -25,10 +25,12 @@ def get_client():
     try:
         user_name = os.environ['SAGE_USER']
         password = os.environ['SAGE_PASSWORD']
+        base_url = os.environ['SAGE_BASE_URL']
     except Exception:
-        print('Missing environment variables SAGE_USER and SAGE_PASSWORD')
+        print('Missing environment variables SAGE_USER, SAGE_PASSWORD '
+              'and SAGE_BASE_URL')
 
-    return Client('http://sage.fabfab.de/', user_name, password)
+    return Client(base_url, user_name, password)
 
 
 @click.group()
@@ -56,7 +58,7 @@ def go_break():
     commands.go(get_client(), True)
 
 
-@cli.command('return', help="Clock in")
+@cli.command('return', help="Clock in from the break at same location")
 def come_back():
     commands.come(get_client(), True)
 
