@@ -2,6 +2,7 @@ from datetime import datetime, timedelta
 from itertools import groupby
 from prettytable import PrettyTable
 from math import copysign
+from pprint import pprint
 
 from sage_drop.client import Client
 
@@ -12,16 +13,15 @@ def format_minutes(time_in_minutes):
             f':{abs_time % 60:02.0f}')
 
 
-
 def balance(client: Client):
     balance_data = client.get_balance()
     data = balance_data[0]
     time_in_minutes = data['AmountInMinutes']
-    abs_time = abs(time_in_minutes)
+    # abs_time = abs(time_in_minutes)
     print(f'Balance: {format_minutes(time_in_minutes)}')
 
 
-def come(client: Client):
+def come(client: Client, come_back: bool):
     date_from = client.get_current_time().date()
     date_to = date_from + timedelta(days=1)
     times = client.time_pairs(date_from, date_to)
@@ -30,16 +30,21 @@ def come(client: Client):
         if event.get('To') is None:
             print('You are already clocked in')
             return
-    locations = client.get_places_of_work()
-    options = ', '.join([f'({index}) {item['Name']}'
-                        for index, item in enumerate(locations)])
-    index = input(f'Please choose location: {options}: ')
-    try:
-        location = locations[int(index)]
-    except Exception:
-        print('Invalid location')
-        return
-    client.stamp_time('Come', location['Id'])
+        elif come_back:
+            prefered_location = event['From']['PlaceOfWork']['Id']
+
+    if prefered_location is None:
+        locations = client.get_places_of_work()
+        options = ', '.join([f'({index}) {item['Name']}'
+                            for index, item in enumerate(locations)])
+        index = input(f'Please choose location: {options}: ')
+        try:
+            location = locations[int(index)]
+            prefered_location = location['Id']
+        except Exception:
+            print('Invalid location')
+            return
+    client.stamp_time('Come', prefered_location)
 
 
 def go(client: Client, is_break: bool):
@@ -100,10 +105,11 @@ def map_event(item, now):
     return event
 
 
-def times(client: Client, date_from, date_to):
+def times(client: Client, date_from, date_to, range_days):
     now = client.get_current_time().replace(tzinfo=None)
     if date_from is None:
-        date_from = now.date() - timedelta(days=now.weekday())
+        date_from = now.date() - timedelta(
+            days=range_days if range_days else now.weekday())
     if date_to is None:
         date_to = now.date() + timedelta(days=1)
     times = client.time_pairs(date_from, date_to)
