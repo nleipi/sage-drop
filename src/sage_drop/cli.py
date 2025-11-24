@@ -2,7 +2,6 @@ from datetime import datetime, timedelta
 from itertools import groupby
 from prettytable import PrettyTable
 from math import copysign
-from pprint import pprint
 
 from sage_drop.client import Client
 
@@ -25,6 +24,7 @@ def come(client: Client, come_back: bool):
     date_from = client.get_current_time().date()
     date_to = date_from + timedelta(days=1)
     times = client.time_pairs(date_from, date_to)
+    prefered_location = None
     if len(times) > 0:
         event = times[-1]
         if event.get('To') is None:
