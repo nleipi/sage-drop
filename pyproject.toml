@@ -1,6 +1,6 @@
 [project]
 name = "sage-drop"
-version = "0.2.0"
+version = "0.2.1"
 description = ""
 authors = [
     {name = "Nikolay Leipi",email = "nikolay.semykin@googlemail.com"}
