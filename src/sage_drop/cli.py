@@ -1,3 +1,5 @@
+import os
+import shutil
 from datetime import datetime, timedelta
 from itertools import groupby
 from prettytable import PrettyTable
@@ -135,3 +137,15 @@ def times(client: Client, date_from, date_to, range_days):
                         ],
                     divider=is_last_row)
     print(table)
+
+def documents(client: Client, path: str):
+    if not os.path.exists(path):
+        os.makedirs(path)
+    document_meta_data = client.get_documents()
+    for document in document_meta_data:
+        file_name = os.path.join(path, f'{document["RptPeriode"]}_{document["Name"]}.pdf')
+        print(f"Downloading: {file_name} ...")
+        with client.download_document(document['ID']) as document_content:
+            with open(os.path.join(file_name), 'wb') as f:
+                shutil.copyfileobj(document_content.raw, f)
+        print("Done.")
