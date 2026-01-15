@@ -1,6 +1,6 @@
 [project]
 name = "sage-drop"
-version = "0.2.1"
+version = "0.2.2"
 description = ""
 authors = [
     {name = "Nikolay Leipi",email = "nikolay.semykin@googlemail.com"}
@@ -16,9 +16,6 @@ dependencies = [
 
 [tool.poetry]
 packages = [{include = "sage_drop", from = "src"}]
-include = [
-    "app.py"
-]
 
 [dependency-groups]
 dev = [

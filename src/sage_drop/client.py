@@ -95,3 +95,20 @@ class Client():
         res = self.session.get(self.get_url(
             'hrportalapi/Time/Common/PlacesOfWork'))
         return res.json()
+
+    def get_documents(self):
+        # http://sage.fabfab.de/hrportalapi/Employee/Pay/Documents?MdNr=XXX&AnNr=YYY&sbc=false
+        params = {
+            'MdNr': self.auth_info['EmployeeKey']['MdNr'],
+            'AnNr': self.auth_info['EmployeeKey']['AnNr'],
+            'sbc': False
+        }
+        res = self.session.get(self.get_url('hrportalapi/Employee/Pay/Documents'), params=params)
+        return res.json()
+
+    def download_document(self, document_id):
+        params = {
+            'id': document_id,
+            'inline': False,
+        }
+        return self.session.get(self.get_url('hrportalapi/Employee/Pay/Documents'), params=params, stream=True)
