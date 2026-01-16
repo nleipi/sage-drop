@@ -1,5 +1,6 @@
 import os
 import argparse
+
 import click
 from datetime import datetime
 
@@ -75,3 +76,11 @@ def come_back():
               help="Last X days")
 def times(from_date, to_date, range_days):
     commands.times(get_client(), from_date, to_date, range_days)
+
+@cli.command(help="Download all documents")
+@click.option("-o", "--out-dir", "out_dir",
+              default=os.getcwd(),
+              help="This is the directory to put files in (default: current dir)")
+def documents(out_dir: str):
+    commands.documents(get_client(), out_dir)
+
